@@ -9,13 +9,17 @@ def get_value(question:str, conversion_function = lambda x:float(x)):
         except ValueError:
             print("Invalid number")
 
-def get_choice(question:str, choice_strings:list[str]):
+def get_choice(question:str, choice_strings:list[str], return_string = False):
     print(question)
     for i, choice_string in enumerate(choice_strings):
         print(choice_string + " ["+str(i+1)+"]")
     while True:
         choice_number = get_value("", lambda x: int(x))
         if 1 <= choice_number <= len(choice_strings):
+
+            if return_string:
+                return choice_strings[choice_number - 1]
+
             return choice_number-1
 
 
@@ -40,6 +44,7 @@ def main():
     if method_to_use == 0:
         E = get_value("Strike Price: ")
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: float(x))
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"], return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, lambda x:max(x-E,0), number_of_steps=number_of_steps, k=2,
                                    american=is_american, lower_bound=None, upper_bound=None)
 
