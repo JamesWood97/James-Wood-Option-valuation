@@ -2,6 +2,13 @@ from knomial import *
 from finitedifference import *
 
 def get_value(question:str, conversion_function = lambda x:float(x)):
+    """
+    Gets the user input and returns it in the type specified in the conversion_function. If an invalid input is given
+    it gets the user input again until a valid input is given
+    :param question: the question the user is asked
+    :param conversion_function: function that converts the input from a string to the desired type. defaults to float
+    :return: returns the value inputted in as the type specified in the conversion_function
+    """
     while True:
         value = input(question)
         try:
@@ -10,6 +17,13 @@ def get_value(question:str, conversion_function = lambda x:float(x)):
             print("Invalid number")
 
 def get_choice(question:str, choice_strings:list[str], return_string = False):
+    """
+
+    :param question: the question the user is asked
+    :param choice_strings: list containing a string saying each choice, presented to the user
+    :param return_string: if thestring selected should be returned in place of the index selected
+    :return:
+    """
     print(question)
     for i, choice_string in enumerate(choice_strings):
         print(choice_string + " ["+str(i+1)+"]")
