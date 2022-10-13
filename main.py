@@ -44,11 +44,19 @@ def main():
     if method_to_use == 0:
         E = get_value("Strike Price: ")
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"], return_string=True)
-        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, lambda x:max(x-E,0), number_of_steps=number_of_steps, k=2,
-                                   american=is_american, lower_bound=None, upper_bound=None)
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+                          return_string=True)
+        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, lambda x:max(x-E,0), number_of_steps=number_of_steps,
+                                   k=2, american=is_american, lower_bound=None, upper_bound=None)
 
 
+    elif method_to_use == 1:
+        E = get_value("Strike Price: ")
+        number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+                          return_string=True)
+        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, lambda x:max(x-E,0), number_of_steps=number_of_steps,
+                                   k=3, american=is_american, lower_bound=None, upper_bound=None)
 
     print(estimated_value)
 
