@@ -28,7 +28,8 @@ def main():
 
     option_type_index = get_choice("Option type:",["European", "American"])
     is_american = bool(option_type_index)
-    method_to_use = get_choice("Method to use:", avalible_methods_for_option_type[{True: "american", False: "european"}])
+    method_to_use = get_choice("Method to use:",
+                               avalible_methods_for_option_type[{True: "american", False: "european"}[is_american]])
 
     r = get_value("Interest rate: ")
     sigma = get_value("Volatility: ")
@@ -36,7 +37,7 @@ def main():
     T = get_value("Years until expiry: ")
     q = get_value("Dividend rate")
 
-    if method_to_use == "binomial":
+    if method_to_use == 0:
         E = get_value("Strike Price: ")
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: float(x))
         estimated_value = k_nomial(T, sigma, r, q, S, E, lambda x:max(x-E,0), number_of_steps=number_of_steps, k=2,
