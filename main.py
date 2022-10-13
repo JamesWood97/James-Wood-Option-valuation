@@ -1,5 +1,6 @@
 from knomial import *
 from finitedifference import *
+from montecarlo import *
 
 def get_value(question:str, conversion_function = lambda x:float(x)):
     """
@@ -59,6 +60,7 @@ def main():
     q = 0
     lower_barrier = None
     upper_barrier = None
+
     payoff = lambda x:max(x-E,0)
 
     if method_to_use == "binomial":
@@ -68,7 +70,6 @@ def main():
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=2, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
 
-
     elif method_to_use == "trinomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
@@ -76,14 +77,16 @@ def main():
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=3, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
 
-
     elif method_to_use == "finite difference":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Fintie difference method to use:", ["Explicit", "Implicit", "Crank-Nicolson"],
                           return_string=True)
         fdm_obj = FDM(T, sigma, r, q, S, E, payoff, number_of_steps, number_of_t_nodes=None, dx=None, mode =mode, lower_barrier=lower_barrier, upper_barrier=upper_barrier, american=is_american)
         estimated_value = fdm_obj.get_value_estimation_at_start(S)
-
+    
+    elif method_to_use == "monte carlo":
+        number_of_trials = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
+        estimated_value, conf_interval_095 = monte_carlo(T, sigma, r, q, S, E, payoff, number_of_trials=number_of_trials)
     else:
         raise Exception(method_to_use,"is not a valid method")
 
