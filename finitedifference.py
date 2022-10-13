@@ -72,7 +72,7 @@ class FDM:
 
         k = self.k
         self.payoff = payoff
-        v_payoff = lambda x: payoff(E*np.exp(x), E)/E
+        v_payoff = lambda x: payoff(E*np.exp(x))/E
         u_payoff = lambda x:np.exp(0.5*(k-1)*x)*v_payoff(x)
         self.u_payoff = u_payoff
 
