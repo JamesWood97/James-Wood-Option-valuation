@@ -1,7 +1,7 @@
 from finance import *
 
 
-def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, type="european",lower_bound=None,upper_bound=None):
+def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, american=False, lower_bound=None,upper_bound=None):
     s = sigma
 
     dt = T / number_of_steps
@@ -42,7 +42,7 @@ def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, type="e
                 if underlying_S <= lower_bound:
                     option_values.append(0)
                     continue
-            if type == "american":
+            if american:
                 option_values.append(max(payoff(underlying_S,E),val))
             else:
                 option_values.append(val)
