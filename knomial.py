@@ -1,7 +1,7 @@
 from finance import *
 
 
-def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, american=False, lower_bound=None,upper_bound=None):
+def k_nomial(T, sigma, r, q, S, mode, payoff, number_of_steps=1, k=2, american=False, lower_bound=None,upper_bound=None):
     s = sigma
 
     dt = T / number_of_steps
@@ -20,7 +20,7 @@ def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, america
         for i in range(1,len(previous_S_values)):
             new_S_values.append(previous_S_values[i] * u_values[-1])
         S_values.append(new_S_values)
-    option_values = [payoff(x,E) for x in S_values[-1]]
+    option_values = [payoff(x) for x in S_values[-1]]
 
 
     #backtrack
