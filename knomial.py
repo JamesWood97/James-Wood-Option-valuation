@@ -1,7 +1,7 @@
 from finance import *
 
 
-def k_nomial(T, sigma, r, q, S, mode, payoff, number_of_steps=1, k=2, american=False, lower_bound=None,upper_bound=None):
+def k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=1, k=2, american=False, lower_bound=None,upper_bound=None):
     s = sigma
 
     dt = T / number_of_steps
