@@ -95,22 +95,25 @@ def main():
     q = 0
     lower_barrier, upper_barrier = get_barriers(S)
 
-    option_type_index = get_choice("Call or put?", ["Call","Put"], return_string = False)
+    option_type_index = get_choice("Call or put?", ["Call", "Put"], return_string=False)
     if option_type_index == 0:
         payoff = lambda x:max(x-E,0)
     else:
         payoff = lambda x: max(E-x, 0)
 
+    option = Option(S, E, T, sigma, r, lower_barrier, upper_barrier, is_american, payoff)
+
+
     if method_to_use == "binomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=2, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
 
     elif method_to_use == "trinomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=3, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
@@ -118,7 +121,7 @@ def main():
     elif method_to_use == "large branched tree":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         number_of_branches_per_node = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=number_of_branches_per_node, american=is_american, lower_bound=lower_barrier,
@@ -135,14 +138,12 @@ def main():
     elif method_to_use == "monte carlo":
         if lower_barrier is None and upper_barrier is None:
             number_of_trials = get_value("Number of paths: ", conversion_function=lambda x: int(x))
-            estimated_value, conf_interval_095 = monte_carlo(T, sigma, r, q, S, E, payoff,
+            estimated_value, conf_interval_095 = monte_carlo(option,
                                                              number_of_trials=number_of_trials)
         else:
             number_of_trials = get_value("Number of paths: ", conversion_function=lambda x: int(x))
             number_of_steps_per_path = get_value("Number of steps per path: ", conversion_function=lambda x: int(x))
-            estimated_value, conf_interval_095 = monte_carlo_barrier(T, sigma, r, S, E,
-                                                                     payoff, lower_barrier=lower_barrier,
-                                                                     upper_barrier=upper_barrier,
+            estimated_value, conf_interval_095 = monte_carlo_barrier(option,
                                                                      number_of_trials=number_of_trials,
                                                                      number_of_steps_per_path=number_of_steps_per_path)
 

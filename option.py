@@ -13,7 +13,8 @@ class Option:
         :param lower_barrier: The lower barrier. If there is no lower barrier, this should be None
         :param upper_barrier: The upper barrier. If there is no upper barrier, this should be None
         :param is_american: If the option is american (as opposed to european)
-        :param payoff_function: The payoff function. For eample, for a call with strike price E this would be lambda x:max(x-E,0)
+        :param payoff_function: The payoff function. For example, for a call with asset price S with strike price E this would be lambda S,E:max(S-E,0)
+
         """
         self.spot_price = spot_price
         self.strike_price = strike_price
@@ -23,4 +24,5 @@ class Option:
         self.lower_barrier = lower_barrier
         self.upper_barrier = upper_barrier
         self.is_american = is_american
+        self.payoff = lambda x: payoff_function(x,self.strike_price)# when called, this DOES NOT take the strike price as a parameter
 

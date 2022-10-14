@@ -1,4 +1,5 @@
 from math import *
+from option import *
 
 def inv_erf(x):
     y = 0
