@@ -103,29 +103,24 @@ def main():
 
     option = Option(S, E, T, sigma, r, lower_barrier, upper_barrier, is_american, payoff)
 
-
     if method_to_use == "binomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
-                                   k=2, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
+        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=2)
 
     elif method_to_use == "trinomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Underlying binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
-                                   k=3, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
+        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=3)
 
     elif method_to_use == "large branched tree":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         number_of_branches_per_node = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Underlying binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
-                                   k=number_of_branches_per_node, american=is_american, lower_bound=lower_barrier,
-                                   upper_bound=upper_barrier)
+        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=number_of_branches_per_node)
 
     elif method_to_use == "finite difference":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
@@ -150,7 +145,7 @@ def main():
     else:
         raise Exception(method_to_use,"is not a valid method")
 
-    print("Estimated option value:",estimated_value)
+    print("Estimated option value:", estimated_value)
 
 
 
