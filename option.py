@@ -2,7 +2,8 @@ class Option:
     def __init__(self, spot_price: float | int, strike_price: float | int, time_until_expiry: float | int,
                  volatility: float | int,
                  interest_rate: float | int, lower_barrier: float | int = None,
-                 upper_barrier: float | int = None, is_american: bool = False, payoff_function=None):
+                 upper_barrier: float | int = None, is_american: bool = False, payoff_function=None,
+                 dividend_rate: float = 0):
         """
         Constructor for option class
         :param spot_price: The spot price of the option. Can be int or float
@@ -25,4 +26,4 @@ class Option:
         self.upper_barrier = upper_barrier
         self.is_american = is_american
         self.payoff = lambda x: payoff_function(x,self.strike_price)# when called, this DOES NOT take the strike price as a parameter
-
+        self.dividend_rate = dividend_rate
