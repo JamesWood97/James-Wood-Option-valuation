@@ -76,6 +76,10 @@ def get_barriers(S):
 
 
 def main():
+    """
+    Main function. Asks the user for option parameters and emthod to use then prints an estimated value
+    :return:
+    """
     avalible_methods_for_option_type = {"european": ["binomial", "trinomial", "finite difference", "monte carlo",
                                                      "large branched tree"],
                                         "american": ["binomial", "finite difference"]}
