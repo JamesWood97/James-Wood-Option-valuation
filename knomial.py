@@ -8,6 +8,7 @@ def k_nomial(option: Option, mode, number_of_steps=1, k=2):
     r = option.interest_rate
     dt = T / number_of_steps
     binomial_number_of_steps = number_of_steps*(k-1)
+    q = option.dividend_rate
     u,d,pu = get_binomial_values(T,binomial_number_of_steps,sigma,r,q,E,S,mode)
     pd = 1-pu
     u_values = [u ** i * d ** (k - 1 - i) for i in range(k)]
