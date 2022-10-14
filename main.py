@@ -81,12 +81,15 @@ def main():
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Fintie difference method to use:", ["Explicit", "Implicit", "Crank-Nicolson"],
                           return_string=True)
-        fdm_obj = FDM(T, sigma, r, q, S, E, payoff, number_of_steps, number_of_t_nodes=None, dx=None, mode =mode, lower_barrier=lower_barrier, upper_barrier=upper_barrier, american=is_american)
+        fdm_obj = FDM(T, sigma, r, q, S, E, payoff, number_of_steps, number_of_t_nodes=None, dx=None, mode =mode,
+                      lower_barrier=lower_barrier, upper_barrier=upper_barrier, american=is_american)
         estimated_value = fdm_obj.get_value_estimation_at_start(S)
     
     elif method_to_use == "monte carlo":
-        number_of_trials = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        estimated_value, conf_interval_095 = monte_carlo(T, sigma, r, q, S, E, payoff, number_of_trials=number_of_trials)
+        number_of_trials = get_value("Number of paths: ", conversion_function=lambda x: int(x))
+        estimated_value, conf_interval_095 = monte_carlo(T, sigma, r, q, S, E, payoff,
+                                                         number_of_trials=number_of_trials)
+
     else:
         raise Exception(method_to_use,"is not a valid method")
 
