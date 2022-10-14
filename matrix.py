@@ -1,8 +1,20 @@
 import random, time
 from math import *
-import matplotlib.pyplot as plt
 class Matrix:
+    """
+    Matrix class. Supports arbitrarily sized matrices and matrix addition and multiplication as well as transposition, LU decomposition and other functions
+    """
     def __init__(self,n,mathematical_indexing=False):
+        """
+        Matrix class. creates a matrix base do the parameter n
+        If n is an int, it creates an nxn matrix of zeros
+        If n is a tuple, it creates a matrix of zeros with dimensions n[0], n[1]
+        If n is a list, it creates a matrix with dimension (1,len(n) and the values of n
+        If n is a matrix, it creates a deep copy of n
+        If n is a string, it creates a matrix based on the input. takes the style of matrix inputs in matlab
+        :param n: main parameter. the type of this decide show the matrix is created
+        :param mathematical_indexing: if the matrix should use mathematical indexing (top left value is (1,1)) or compsci indexing (top left vlaue is (0,0))
+        """
         self.index_offset = 0
         if type(n) is int:
             self.values = [[0 for i in range(n)] for j in range(n)]
@@ -357,20 +369,6 @@ def tridiagonal_solve(A,d):
     for i in range(n-2,-1,-1):
         #print("i",i,"x",x)
         x[i] = (d[i] - c[i]*x[i+1])/b[i]
-    """a = [None] + a
-    print(a,b,c)
-    cdash = [c[0]/b[0]]
-    for i in range(1, n - 1):
-        cdash.append(c[i]/(b[i] - a[i]*cdash[i-1]))
-    ddash = [d[1] / b[1]]
-    for i in range(1, n):
-        ddash.append((d[i] - a[i]*ddash[i-1])/(b[i] - a[i]*cdash[i-1]))
-    print(cdash)
-    print(ddash)
-    x = [None for i in range(n)]
-    x[-1] = ddash[-1]
-    for i in range(n-2,-1,-1):
-        x[i] = ddash[i] - cdash[i] * x[i+1]"""
     x = Matrix(x)
     x.transpose()
     return x
@@ -381,86 +379,3 @@ def newton_interation(inv_A_est,A,amount_of_interations=30):
     for i in range(amount_of_interations):
         inv_A_est = inv_A_est*2 - inv_A_est*(A*inv_A_est)
     return inv_A_est
-
-if __name__ == "__main__":
-    M = Matrix("4 12 -16; 12 37 -43; -16 -43 98")
-    print(M)
-    L = M.get_chomsky_decomp()
-    print(L)
-    L_trans = Matrix(L)
-    L_trans.transpose()
-    print(L*L_trans)
-    input()
-
-
-
-
-
-
-
-
-
-
-
-    n = 10
-    random.seed(4)
-    A = Matrix(n)
-    A.random_tridiangonal()
-    b = Matrix((n,1))
-    b.random()
-    x = tridiagonal_solve(A,b)
-    print(x)
-    print(b[3])
-    b = A*x
-    print(b[3])
-
-
-
-    n_vals = []
-    LU_vals = []
-    gaus_vals = []
-    tri_vals = []
-    trials = 10
-    max_n = 100
-    min_n = 20
-    for _ in range(1):
-        for n in range(min_n,max_n + 1):
-            random.seed(4)
-            A = Matrix(n)
-            A.random_tridiangonal()
-            b = Matrix((n, 1))
-            b.random()
-            LU_vals_trials = []
-            gaus_vals_trials = []
-            tri_vals_trails = []
-            for i in range(trials):
-                print(n,i)
-                time1 = time.process_time_ns()
-                x = LU_solve(A,b)
-                time2 = time.process_time_ns()
-                x = solve(A,b)
-                time3 = time.process_time_ns()
-                x = tridiagonal_solve(A, b)
-                time4 = time.process_time_ns()
-                LU_vals_trials.append(log((time2 - time1 + 1)/1000000,  2))
-                gaus_vals_trials.append(log((time3 - time2+ 1)/1000000,2))
-                tri_vals_trails.append(log((time4 - time3+ 1)/1000000, 2))
-            LU_vals_trials.sort()
-            gaus_vals_trials.sort()
-            tri_vals_trails.sort()
-            LU_vals_trials = LU_vals_trials[1:-1]
-            gaus_vals_trials = gaus_vals_trials[1:-1]
-            tri_vals_trails = tri_vals_trails[1:-1]
-            LU_vals.append(sum(LU_vals_trials)/len(LU_vals_trials))
-            gaus_vals.append(sum(gaus_vals_trials) / len(gaus_vals_trials))
-            tri_vals.append(sum(tri_vals_trails) / len(tri_vals_trails))
-            n_vals.append(n)
-
-
-    plt.plot(n_vals, gaus_vals, label="Gaussian Elimination")
-    plt.plot(n_vals, LU_vals, label="LU Decomposition")
-    #plt.plot(n_vals, tri_vals, label="Tridiagonal")
-    plt.xlabel("size of square matrix")
-    plt.ylabel("log base 2 of the time taken in ms")
-    plt.legend(loc='upper right')
-    plt.show()
