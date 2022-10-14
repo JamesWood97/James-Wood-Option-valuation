@@ -95,7 +95,7 @@ def main():
     q = 0
     lower_barrier, upper_barrier = get_barriers(S)
 
-    option_type_index = get_choice("Call or put?", ["Call","Put"], return_string = False)
+    option_type_index = get_choice("Call or put?", ["Call","Put"], return_string=False)
     if option_type_index == 0:
         payoff = lambda x:max(x-E,0)
     else:
@@ -103,14 +103,14 @@ def main():
 
     if method_to_use == "binomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=2, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
 
     elif method_to_use == "trinomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=3, american=is_american, lower_bound=lower_barrier, upper_bound=upper_barrier)
@@ -118,7 +118,7 @@ def main():
     elif method_to_use == "large branched tree":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         number_of_branches_per_node = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
-        mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubenstein", "Jarrow-Rudd", "Leisen-Reimer"],
+        mode = get_choice("Underlying ninomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
         estimated_value = k_nomial(T, sigma, r, q, S, E, mode, payoff, number_of_steps=number_of_steps,
                                    k=number_of_branches_per_node, american=is_american, lower_bound=lower_barrier,
