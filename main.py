@@ -77,8 +77,7 @@ def get_barriers(S):
 
 def main():
     """
-    Main function. Asks the user for option parameters and emthod to use then prints an estimated value
-    :return:
+    Main function. Asks the user for option parameters and method to use then prints an estimated value
     """
     avalible_methods_for_option_type = {"european": ["binomial", "trinomial", "finite difference", "monte carlo",
                                                      "large branched tree"],
@@ -105,7 +104,7 @@ def main():
     else:
         payoff = lambda x: max(E-x, 0)
 
-    option = Option(S, E, T, sigma, r, lower_barrier, upper_barrier, is_american, payoff)
+    option = Option(S, E, T, sigma, r, lower_barrier, upper_barrier, is_american, payoff, q)
 
     if method_to_use == "binomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
