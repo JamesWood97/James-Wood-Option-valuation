@@ -74,7 +74,6 @@ def get_barriers(S):
 
 
 
-
 def main():
     """
     Main function. Asks the user for option parameters and method to use then prints an estimated value
@@ -129,8 +128,7 @@ def main():
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Fintie difference method to use:", ["Explicit", "Implicit", "Crank-Nicolson"],
                           return_string=True)
-        fdm_obj = FDM(T, sigma, r, q, S, E, payoff, number_of_steps, number_of_t_nodes=None, dx=None, mode =mode,
-                      lower_barrier=lower_barrier, upper_barrier=upper_barrier, american=is_american)
+        fdm_obj = FDM(option, number_of_steps ,mode=mode)
         estimated_value = fdm_obj.get_value_estimation_at_start(S)
     
     elif method_to_use == "monte carlo":
@@ -149,9 +147,6 @@ def main():
         raise Exception(method_to_use,"is not a valid method")
 
     print("Estimated option value:", estimated_value)
-
-
-
 
 
 if __name__ == "__main__":
