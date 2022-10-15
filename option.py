@@ -16,6 +16,9 @@ class Option:
         :param is_american: If the option is american (as opposed to european)
         :param payoff_function: The payoff function. For example, for a call with asset price S with strike price E this would be lambda S,E:max(S-E,0)
         """
+        if lower_barrier is not None and upper_barrier is not None and lower_barrier > upper_barrier:
+            raise Exception("Lower barrier",lower_barrier,"has a larger value than",upper_barrier)
+
         self.spot_price = spot_price
         self.strike_price = strike_price
         self.time_until_expiry = time_until_expiry
