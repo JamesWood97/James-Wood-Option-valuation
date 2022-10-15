@@ -278,8 +278,8 @@ class FDM:
                     x = self.x_values[next_values_index+1]
                     E = self.E
                     tau = self.tau_values[t_index]
-                    if self.american and next_values[next_values_index] < self.payoff(E*exp(x),E)/E*exp((self.k - 1)*x/2 + (self.k + 1)**2 * tau/4):
-                        self[next_values_index + 1, t_index] = self.payoff(E*np.exp(x), E)/E * exp((self.k-1)*x/2 +  (self.k + 1)**2 * tau/4)
+                    if self.american and next_values[next_values_index] < self.payoff(E*exp(x))/E*exp((self.k - 1)*x/2 + (self.k + 1)**2 * tau/4):
+                        self[next_values_index + 1, t_index] = self.payoff(E*np.exp(x))/E * exp((self.k-1)*x/2 +  (self.k + 1)**2 * tau/4)
         elif inversion_type == "tridiagonal":
             m = Matrix((self.number_of_x_nodes - 2,self.number_of_x_nodes - 2))
             for i in range(self.number_of_x_nodes - 2):
@@ -326,8 +326,8 @@ class FDM:
                     x = self.x_values[next_values_index+1]
                     E = self.E
                     tau = self.tau_values[t_index]
-                    if self.american and next_values[next_values_index] < self.payoff(E*exp(x),E)/E*exp((self.k - 1)*x/2 + (self.k + 1)**2 * tau/4):
-                        self[next_values_index + 1, t_index] = self.payoff(E*np.exp(x), E)/E * exp((self.k-1)*x/2 + (self.k + 1)**2 * tau/4)
+                    if self.american and next_values[next_values_index] < self.payoff(E*exp(x))/E*exp((self.k - 1)*x/2 + (self.k + 1)**2 * tau/4):
+                        self[next_values_index + 1, t_index] = self.payoff(E*np.exp(x))/E * exp((self.k-1)*x/2 + (self.k + 1)**2 * tau/4)
 
         elif inversion_type == "tridiagonal":
             m = Matrix((self.number_of_x_nodes - 2,self.number_of_x_nodes - 2))
