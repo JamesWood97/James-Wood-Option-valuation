@@ -2,14 +2,10 @@ from finance import *
 
 
 def k_nomial(option: Option, mode, number_of_steps=1, k=2):
-    T = option.time_until_expiry
-    E = option.strike_price
-    sigma = option.volatility
-    r = option.interest_rate
+    S, E, r, sigma, q, T = option.return_parameters()
     dt = T / number_of_steps
     binomial_number_of_steps = number_of_steps*(k-1)
-    q = option.dividend_rate
-    u,d,pu = get_binomial_values(T,binomial_number_of_steps,sigma,r,q,E,S,mode)
+    u,d,pu = get_binomial_values(T, binomial_number_of_steps, sigma, r, q, E, S, mode)
     pd = 1-pu
     u_values = [u ** i * d ** (k - 1 - i) for i in range(k)]
     p_values = [comb(k - 1, i) * pu ** i * pd ** (k - 1 - i) for i in range(k)]

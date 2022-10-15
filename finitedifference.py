@@ -1,6 +1,6 @@
 import numpy as np
 from matrix import *
-
+from option import *
 def sum_mine(array):
     total = 0
     for item in array:
@@ -33,27 +33,28 @@ def sum_mine(array):
 
 
 class FDM:
-    def __init__(self, T, sigma, r, q, S, E, payoff, number_of_x_nodes, number_of_t_nodes=None, dx=None, mode ="cn", lower_barrier=None, upper_barrier=None, centre="S", inversion_type="numpy", american=False):
+    def __init__(self, option:Option, number_of_x_nodes, number_of_t_nodes=None, dx=None, mode ="cn", centre="S", inversion_type="numpy"):
+        S, E, r, sigma, q, T = option.return_parameters()
         if dx is None:
             dx = 8 / number_of_x_nodes
         if number_of_t_nodes is None:
             number_of_t_nodes = max(int(number_of_x_nodes / 8), 2)
-        if lower_barrier is None and upper_barrier is None:
+        if option.lower_barrier is None and option.upper_barrier is None:
             if centre == "S":
                 x_bounds = [np.log(S/E) - ((number_of_x_nodes - 1) / 2) * dx, np.log(S / E) + ((number_of_x_nodes - 1) / 2) * dx]
             else:
                 x_bounds = [-1.5,1.5]
                 x_bounds.sort()
                 dx = (x_bounds[1] - x_bounds[0]) / (number_of_x_nodes - 1)
-        elif upper_barrier is None:
-            x_bounds = [np.log(lower_barrier / E),
-                        np.log(lower_barrier / E) + (number_of_x_nodes - 1) * dx]
-        elif lower_barrier is None:
-            x_bounds = [np.log(upper_barrier / E) - (number_of_x_nodes - 1) * dx,
-                        np.log(upper_barrier / E)]
+        elif option.upper_barrier is None:
+            x_bounds = [np.log(option.lower_barrier / E),
+                        np.log(option.lower_barrier / E) + (number_of_x_nodes - 1) * dx]
+        elif option.lower_barrier is None:
+            x_bounds = [np.log(option.upper_barrier / E) - (number_of_x_nodes - 1) * dx,
+                        np.log(option.upper_barrier / E)]
         else:
-            x_bounds = [np.log(lower_barrier / E),
-                        np.log(upper_barrier / E)]
+            x_bounds = [np.log(option.lower_barrier / E),
+                        np.log(option.upper_barrier / E)]
             dx = (x_bounds[1] - x_bounds[0]) / (number_of_x_nodes - 1)
         #print("x_bounds:",x_bounds)
 
@@ -66,25 +67,25 @@ class FDM:
         self.get_FDM_values(S, E, T, sigma, r)
         self.number_of_t_values = number_of_t_nodes
         self.number_of_x_nodes = number_of_x_nodes
-        self.american = american
+        self.american = option.is_american
         #print("alpha:",self.alpha)
 
 
         k = self.k
-        self.payoff = payoff
-        v_payoff = lambda x: payoff(E*np.exp(x))/E
+        self.payoff = option.payoff
+        v_payoff = lambda x: option.payoff(E*np.exp(x))/E
         u_payoff = lambda x:np.exp(0.5*(k-1)*x)*v_payoff(x)
         self.u_payoff = u_payoff
 
         #print(np.log(S/E), dx, int((number_of_x_values - 1)/2), int((number_of_x_values - 1)/2)*dx )
 
         #print("dx",dx,"dt",dtau)
-        if lower_barrier is None:
+        if option.lower_barrier is None:
             t_lower_boundary = lambda t: u_payoff(-1*2**5)#0
         else:
             t_lower_boundary = lambda t: 0
 
-        if upper_barrier is None:
+        if option.upper_barrier is None:
             t_upper_boundary = lambda t: u_payoff(-1*2**5)#0
         else:
             t_upper_boundary = lambda t: 0
@@ -92,7 +93,7 @@ class FDM:
         x_boundary = u_payoff
 
         self.solve(x_bounds, tau_bounds, number_of_x_nodes, number_of_t_nodes, x_boundary, t_lower_boundary,
-                   t_upper_boundary, mode=mode, lower_barrier=lower_barrier, upper_barrier=upper_barrier,
+                   t_upper_boundary, mode=mode, lower_barrier=option.lower_barrier, upper_barrier=option.upper_barrier,
                    inversion_type=inversion_type)
 
         #print(self,"\n")

@@ -26,3 +26,8 @@ class Option:
         self.is_american = is_american
         self.payoff = lambda x: payoff_function(x,self.strike_price)# when called, this DOES NOT take the strike price as a parameter
         self.dividend_rate = dividend_rate
+
+    def return_parameters(self):
+        return self.spot_price, self.strike_price, self.interest_rate, self.volatility, self.dividend_rate,\
+               self.time_until_expiry
+        #S, E, r, sigma, q, T
