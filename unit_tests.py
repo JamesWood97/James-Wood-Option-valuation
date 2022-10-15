@@ -3,6 +3,7 @@ from main import *
 
 
 def is_between(a, val, b):
+    """returns true if a < val < b, else false"""
     return a < val < b
 
 
