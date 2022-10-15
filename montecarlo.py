@@ -16,13 +16,15 @@ def geometric_avg(x):
     log_list = [log(i) for i in x]
     return exp(arithmetic_avg(log_list))
 
-def monte_carlo(T,sigma,r,q,S,E,payoff,number_of_trials = 16):
+def monte_carlo(option:Option, number_of_trials = 16):
+
     estimated_values = []
     for i in range(number_of_trials):
         ep = random.normalvariate(0,1)
-        Si = S*exp((r-0.5*sigma**2)*T + ep*sigma*(T**0.5))
-        Vi = payoff(Si,E)
-        estimated_values.append(exp(-1*r*T)*Vi)
+        Si = option.spot_price*exp((option.interest_rate-0.5*option.volatility**2)*option.time_until_expiry +
+                                   ep*option.volatility*(option.time_until_expiry**0.5))
+        Vi = option.payoff(Si)
+        estimated_values.append(exp(-1*option.interest_rate*option.time_until_expiry)*Vi)
     am = sum(estimated_values)/number_of_trials
     b2m = (1/(number_of_trials-1)) * sum([(Vi - am)**2 for Vi in estimated_values])
     bm = b2m**0.5
@@ -45,22 +47,24 @@ def monte_carlo_asian(T,sigma,r,S,E,payoff,averaging_function=geometric_avg,numb
     bm = b2m**0.5
     return am, (am - 1.96*bm*(number_of_trials**-0.5),am + 1.96*bm*(number_of_trials**-0.5))
 
-def monte_carlo_barrier(T,sigma,r,S,E,payoff,lower_barrier=None,upper_barrier=None,number_of_trials = 16,number_of_steps_per_path=16):
+def monte_carlo_barrier(option:Option, number_of_trials=16, number_of_steps_per_path=16):
     estimated_values = []
-    dt = T/number_of_steps_per_path
+    dt = option.time_until_expiry/number_of_steps_per_path
+    lower_barrier = option.lower_barrier
+    upper_barrier = option.upper_barrier
     for i in range(number_of_trials):
-        path = [S]
+        path = [option.spot_price]
         valid_path = True
         for step in range(number_of_steps_per_path):
             ep = random.normalvariate(0,1)
-            Si = path[-1]*exp((r-0.5*sigma**2)*dt + ep*sigma*(dt**0.5))
+            Si = path[-1]*exp((option.interest_rate-0.5*option.volatility**2)*dt + ep*option.volatility*(dt**0.5))
             if (lower_barrier is not None and Si < lower_barrier) or (upper_barrier is not None and Si > upper_barrier):
                 valid_path = False
-                break#this path is ignored
+                break#this path is ignored as it passes though a barrier
             path.append(Si)
         if valid_path:
-            Vi = payoff(path[-1],E)
-            estimated_values.append(exp(-1*r*T)*Vi)
+            Vi = option.payoff(path[-1])
+            estimated_values.append(exp(-1*option.interest_rate*option.time_until_expiry)*Vi)
         else:
             estimated_values.append(0)
     am = sum(estimated_values)/number_of_trials
