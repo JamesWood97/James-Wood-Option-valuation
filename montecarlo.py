@@ -9,14 +9,14 @@ from matrix import *
 
 
 
-def arithmetic_avg(x):
-    return sum(x)/len(x)
 
-def geometric_avg(x):
-    log_list = [log(i) for i in x]
-    return exp(arithmetic_avg(log_list))
-
-def monte_carlo(option:Option, number_of_trials = 16):
+def monte_carlo(option:Option, number_of_trials:int = 16):
+    """
+    Estimates the value of a european barrier-less option
+    :param option: the option
+    :param number_of_trials: number of randomly generated asset paths to take
+    :return: a tuple, containing the estimated value and 95% confidence interval
+    """
 
     estimated_values = []
     for i in range(number_of_trials):
@@ -30,24 +30,15 @@ def monte_carlo(option:Option, number_of_trials = 16):
     bm = b2m**0.5
     return am, (am - 1.96*bm*(number_of_trials**-0.5),am + 1.96*bm*(number_of_trials**-0.5))
 
-def monte_carlo_asian(T,sigma,r,S,E,payoff,averaging_function=geometric_avg,number_of_trials = 16,number_of_steps_per_path=16):
-    estimated_values = []
-    dt = T/number_of_steps_per_path
-    for i in range(number_of_trials):
-        path = [S]
-        for step in range(number_of_steps_per_path):
-            ep = random.normalvariate(0,1)
-            Si = path[-1]*exp((r-0.5*sigma**2)*dt + ep*sigma*(dt**0.5))
-            path.append(Si)
-        avg = averaging_function(path)
-        Vi = payoff(path[-1],avg,E)
-        estimated_values.append(exp(-1*r*T)*Vi)
-    am = sum(estimated_values)/number_of_trials
-    b2m = (1/(number_of_trials-1)) * sum([(Vi - am)**2 for Vi in estimated_values])
-    bm = b2m**0.5
-    return am, (am - 1.96*bm*(number_of_trials**-0.5),am + 1.96*bm*(number_of_trials**-0.5))
 
-def monte_carlo_barrier(option:Option, number_of_trials=16, number_of_steps_per_path=16):
+def monte_carlo_barrier(option: Option, number_of_trials: int = 16, number_of_steps_per_path: int = 16):
+    """
+    Estimates the value of a european barrier option
+    :param option: the option
+    :param number_of_trials: number of randomly generated asset paths to take
+    :param number_of_steps_per_path: the number of steps per path
+    :return: a tuple, containing the estimated value and 95% confidence interval
+    """
     estimated_values = []
     dt = option.time_until_expiry/number_of_steps_per_path
     lower_barrier = option.lower_barrier
@@ -71,6 +62,37 @@ def monte_carlo_barrier(option:Option, number_of_trials=16, number_of_steps_per_
     b2m = (1/(number_of_trials-1)) * sum([(Vi - am)**2 for Vi in estimated_values])
     bm = b2m**0.5
     return am, (am - 1.96*bm*(number_of_trials**-0.5),am + 1.96*bm*(number_of_trials**-0.5))
+
+
+
+
+
+"""
+def arithmetic_avg(x):
+    return sum(x)/len(x)
+
+def geometric_avg(x):
+    log_list = [log(i) for i in x]
+    return exp(arithmetic_avg(log_list))
+
+
+def monte_carlo_asian(T,sigma,r,S,E,payoff,averaging_function=geometric_avg,number_of_trials = 16,number_of_steps_per_path=16):
+    estimated_values = []
+    dt = T/number_of_steps_per_path
+    for i in range(number_of_trials):
+        path = [S]
+        for step in range(number_of_steps_per_path):
+            ep = random.normalvariate(0,1)
+            Si = path[-1]*exp((r-0.5*sigma**2)*dt + ep*sigma*(dt**0.5))
+            path.append(Si)
+        avg = averaging_function(path)
+        Vi = payoff(path[-1],avg,E)
+        estimated_values.append(exp(-1*r*T)*Vi)
+    am = sum(estimated_values)/number_of_trials
+    b2m = (1/(number_of_trials-1)) * sum([(Vi - am)**2 for Vi in estimated_values])
+    bm = b2m**0.5
+    return am, (am - 1.96*bm*(number_of_trials**-0.5),am + 1.96*bm*(number_of_trials**-0.5))
+
 
 def monte_carlo_american(T,sigma,r,q,S,E,payoff,number_of_paths = 16,number_of_steps_per_path=16):
     dt = T/number_of_steps_per_path
@@ -146,6 +168,6 @@ def multivariable_monte_carlo(S_values,sigmas,rho_matrix: Matrix,r,T,payoff,numb
         estimated_option_values.append(payoff(end_S_values))
 
     return exp(-1*r * T) * sum(estimated_option_values)/len(estimated_option_values)
-
+"""
 
 

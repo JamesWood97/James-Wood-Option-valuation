@@ -37,9 +37,7 @@ def get_choice(question:str, choice_strings:list[str], return_string = False):
 
             return choice_number-1
 
-
-
-def get_barriers(S):
+def get_barriers(S : float|int):
     """
     gets barriers for the option from the user
     :param S: the starting value of the asset
@@ -109,20 +107,20 @@ def main():
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=2)
+        estimated_value = tree(option, mode, number_of_steps=number_of_steps, number_of_branches_per_node=2)
 
     elif method_to_use == "trinomial":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Underlying binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=3)
+        estimated_value = tree(option, mode, number_of_steps=number_of_steps, number_of_branches_per_node=3)
 
     elif method_to_use == "large branched tree":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         number_of_branches_per_node = get_value("Number of Steps: ", conversion_function=lambda x: int(x))
         mode = get_choice("Underlying binomial method to use:", ["Cox-Ross-Rubinstein", "Jarrow-Rudd", "Leisen-Reimer"],
                           return_string=True)
-        estimated_value = k_nomial(option, mode, number_of_steps=number_of_steps, k=number_of_branches_per_node)
+        estimated_value = tree(option, mode, number_of_steps=number_of_steps, number_of_branches_per_node=number_of_branches_per_node)
 
     elif method_to_use == "finite difference":
         number_of_steps = get_value("Number of Steps: ", conversion_function=lambda x: int(x))

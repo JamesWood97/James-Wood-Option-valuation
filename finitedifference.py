@@ -13,15 +13,6 @@ def sum_mine(array):
 
 
 
-#this class has several attrributes
-#T, sigma, r, q, S, E, payoff, number_of_x_nodes, number_of_t_nodes=None should be self explanatory
-#mode is what type, so explicit, implicit or crank-nicolson (cn works too)
-#lower_barrier=None, upper_barrier=None, are locations of barriers. option is assuemd to be up/down and out if a barrier is placed
-#centre where the centr eof the mesh should be. can be "S" or "E"
-# american if the optiomn should be american
-
-
-
 #
 #To use this, create a fdm object like so
 #fdmobject = FDM(T, sigma, r, q, S, E, payoff, number_of_x_nodes)
@@ -33,7 +24,21 @@ def sum_mine(array):
 
 
 class FDM:
-    def __init__(self, option:Option, number_of_x_nodes, number_of_t_nodes=None, dx=None, mode ="cn", centre="S", inversion_type="numpy"):
+    def __init__(self, option: Option, number_of_x_nodes: int, number_of_t_nodes=None, dx=None, mode: str = "cn", centre: str = "S", inversion_type="numpy"):
+        """
+        Fintie Difference class for valuing options
+        :param option: The option to be valued
+        :param number_of_x_nodes: the number of x nodes on the mesh
+        :param number_of_t_nodes: the number of t nodes on the mesh. If set to None a number will be chosen by the
+         program to best fit
+        :param dx: the size of the space between node on the x-axis.  If set to None a number will be chosen by the
+         program to best fit
+        :param mode: The finite difference mode to use. Can be "explicit", "implict" or "crank nicolson"
+        :param centre: where to centre the mesh on the x-axis. can be "S" (around the option spot price) or "E" (around
+        the options strike price
+        :param inversion_type: the type of matrix inversion to use. can be "numpy" which will use the numpy library or
+        "tridiagonal" which will use tridiagonal matrix inversion from matrix.py
+        """
         S, E, r, sigma, q, T = option.return_parameters()
         if dx is None:
             dx = 8 / number_of_x_nodes
@@ -77,9 +82,7 @@ class FDM:
         u_payoff = lambda x:np.exp(0.5*(k-1)*x)*v_payoff(x)
         self.u_payoff = u_payoff
 
-        #print(np.log(S/E), dx, int((number_of_x_values - 1)/2), int((number_of_x_values - 1)/2)*dx )
 
-        #print("dx",dx,"dt",dtau)
         if option.lower_barrier is None:
             t_lower_boundary = lambda t: u_payoff(-1*2**5)#0
         else:
