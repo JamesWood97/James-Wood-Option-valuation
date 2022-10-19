@@ -142,7 +142,7 @@ class Barrier_Test(unittest.TestCase):
                         upper_barrier=15)
         fdm_obj = FDM(option, 2000, mode="cn")
         fdm_val = fdm_obj.get_value_estimation_at_start(11)
-        monte_carlo_val = monte_carlo_barrier(option,1000,30)
+        monte_carlo_val = monte_carlo_barrier(option,1000,30)[0]
         self.assertTrue(abs(monte_carlo_val - fdm_val)/fdm_val < 1)
 
 
