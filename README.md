@@ -17,4 +17,4 @@ finance.py contains an assortment of mathematical functions used by the other mo
 
 matrix.py contains a Matrix class that supports arbitrarily sized matrices and matrix addition and multiplication as well as transposition, LU decomposition and other functions
 
-unit_tests.py contains unit tests for tree and fintie difference methods for European, American and Barrier options as well as tests for the option class
+unit_tests.py contains unit tests for tree, monte-carlo and fintie difference methods for European, American and Barrier options as well as tests for the option class itself.
